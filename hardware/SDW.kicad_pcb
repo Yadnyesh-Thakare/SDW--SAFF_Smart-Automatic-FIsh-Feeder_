@@ -2929,17 +2929,6 @@
 			(uuid "a34ae6e9-35a9-4edf-923a-402b9d205a90")
 		)
 		(embedded_fonts no)
-		(model "C:/1YAD/KIcad/LIB/kicad-ESP8266-master/kicad-ESP8266-master/kicad-ESP8266-master/ESP8266.step"
-			(offset
-				(xyz 2 25 5.5)
-			)
-			(scale
-				(xyz 0.8 1 0.8)
-			)
-			(rotate
-				(xyz -90 -0 -0)
-			)
-		)
 	)
 	(gr_rect
 		(start 133.5 75)
