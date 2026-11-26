@@ -16,7 +16,7 @@ flowchart TD
     D --> E[Return gate to 0°]
     B -- No --> F[Check light window]
     E --> F
-    F --> G[Set relay state]
+    F --> G[Set relay state to On/Of for light]
     G --> H[Read LDR on A0]
     H --> I{Food level low?}
     I -- Yes --> J[Blink status LED]
@@ -25,27 +25,14 @@ flowchart TD
     K --> A
 ```
 
-A feeding is released once per programmed minute, so the same time can be used for more than one entry when a larger portion is needed.
+> ❗*A feeding is released once per programmed minute, so the same time can be used for more than one entry when a larger portion is needed.*
 
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant P as Web portal
-    participant E as ESP8266
-    participant R as DS1307
-    participant S as Servo
-    U->>P: Set time, angle and duration
-    P->>E: Save feeding slot
-    loop Every second
-        E->>R: Read time over I2C
-        R-->>E: Date and time
-        alt Slot matches current minute
-            E->>S: Move to feed angle
-            E->>S: Hold for duration
-            E->>S: Return to closed position
-        end
-    end
-```
+LDR logic - We have installed one LED and LDR in the food storage container at a particular height facing opposite direction. 
+- **If the LDR gets logic 1** - (value of LDR grater than a predefined value in code) it means the light form led is coming directly on the LDR. Meaning the food level is below the threshold and refile is required (indicated by LED blinking).
+- **If the LDR gets lofic 0** - (vale of LDR less than a predefined value in code) it means the light is begin obstructed by the food and less/no light fall on the LDR. Meaning the food the above the threshold value.(indicated by OFF LED).
+
+> ❗ *LDR provides analog value which we observed and set the predefined value to set LDR login 0 or 1, we manually did this by checking the value of LDR when the food     storage is full and empty*
+>     The threshold level is provided to set reserved bank. If the user forgot refill even after LED indication. It will use the food stored in the reserved bank until     refill. 
 
 ## Hardware
 
@@ -60,6 +47,7 @@ sequenceDiagram
 | Backup supply | 18650 Li-ion, 3.7 V, 2000 mAh | Runs the feeder through power cuts |
 | 5 V rail | XL6009 boost converter | Raises the cell voltage to a steady 5 V |
 
+## Pins used     
 | Signal | NodeMCU pin | GPIO |
 |---|---|---|
 | I2C clock (SCL) | D1 | GPIO5 |
@@ -68,7 +56,7 @@ sequenceDiagram
 | Relay input | D6 | GPIO12 |
 | Status LED | D5 | GPIO14 |
 | Food level | A0 | ADC |
-
+    
 Standby current is about 100 mA at 5 V, giving roughly 10 hours on the battery; with the light on it is about 180 mA and 5.6 hours. The battery is a backup for power cuts, not the normal supply.
 
 ## PCB
